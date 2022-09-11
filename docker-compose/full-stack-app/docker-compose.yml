@@ -1,0 +1,70 @@
+version: '3'
+
+services:
+  frontend:
+    # TODO => Build image from Dockerfile `PATH -> ./frontend` 📀
+    # TODO => Run container after image creation 💽
+    build: ./frontend
+    ports:
+      # TODO => outer port: 3333, inner port: 3000 -> `VALUE []` 📡
+      #! Different ports do not work if the application is run in development mode ⚠
+      #! When working in development mode, `websocket` is used, which causes the following error ⚠
+      #- '3333: 3000'
+      - '3000:3000'
+    # TODO => Restart the container if the process is stopped 💫
+    restart: always
+    volumes:
+      # TODO =>  📂 Folder The folder that should stay in the project 📌
+      - ./app/node_modules
+      - ./frontend:/app
+
+  backend:
+    # TODO => Build image from Dockerfile `PATH -> ./backend` 📀
+    # TODO => Run container after image creation 💽
+    build: ./backend
+    ports:
+      # TODO => outer port: 5555, inner port: 5000 -> `VALUE []` 📡
+      - '5555:5000'
+    # TODO => Restart the container if the process is stopped 💫
+    restart: always
+    depends_on:
+      # TODO => Service `backend` Depends on Service `mysql` 🔗
+      - mysql
+    volumes:
+      # TODO =>  📂 Folder The folder that should stay in the project 📌
+      - ./app/node_modules
+      - ./backend:/app
+    environment:
+    # TODO => SET environment variables 🏳
+      MYSQL_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: password
+      MYSQL_PORT: '3306'
+      MYSQL_DB: time_db
+
+  mysql:
+    # TODO => Run container from `mysql` image 📀
+    image: mysql
+    environment:
+    # TODO => SET environment variables 🏳
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: time_db
+    # TODO => Restart the container if the process is stopped 💫
+    restart: always
+    volumes:
+      # TODO => Set Volume FROM `Docker Desktop` into container 📂
+      - mysql_data:/var/lib/mysql
+
+  adminer:
+   # TODO => Run container from `adminer` image 💽
+    image: adminer
+    ports:
+      # TODO => outer port: 8888, inner port: 8080 -> `VALUE []` 📡
+      - '8888:8080'
+    # TODO => Restart the container if the process is stopped 💫
+    restart: always
+
+volumes:
+  # TODO => set volumes into `Docker Desktop` -> `linux VM` 📂
+  # TODO => volumes  -> `my_own_volume` 📂Desktop
+  mysql_data:
